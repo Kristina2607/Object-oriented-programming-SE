@@ -8,9 +8,9 @@
 
 ## Задача 3:
 Да се напише структура **Vector**, която да представлява вектор в тримерното евклидово пространство. Да се напише структура **VectorSpace**, която да съдържа в себе си най-много 50 вектора и техния брой. Да се реализират следните функции:
-- void makeVector(int x, int y, int x)
+- Vector makeVector(int x, int y, int x)
 - void addToVectorSpace(VectorSpace& vectorSpace, const Vector& vector)
-- void serializeVector(std::ofstream& ofs)
+- void serializeVector(std::ofstream& ofs, const Vector& vector)
 - Vector deserializeVector(std::ifstream& ifs)
 - void serializeVectorSpace(const char* fileName, const VectorSpace& vectorSpace)
 - VectorSpace deserializeVectorSpace(const char* fileName)
