@@ -142,7 +142,7 @@ double Vector::operator~() const
 	return len;
 }
 
-void Vector::saveToFile(const char* file)
+void Vector::saveToFile(const char* file) const
 {
 	if (!file)
 	{
@@ -164,7 +164,7 @@ void Vector::saveToFile(const char* file)
 void Vector::saveToFile(std::ofstream& ofs) const
 {
 	ofs.write((const char*)&size, sizeof(size_t));
-	ofs.write((char*)data, sizeof(int) * size);
+	ofs.write((const char*)data, sizeof(int) * size);
 }
 
 void Vector::readFromFile(const char* file)

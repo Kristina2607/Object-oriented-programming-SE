@@ -125,7 +125,7 @@ ComplexNumber operator/(const ComplexNumber& lhs, const ComplexNumber& rhs)
 
 bool operator==(const ComplexNumber& lhs, const ComplexNumber& rhs)
 {
-	return lhs.getReal() == rhs.getReal() && lhs.getIm() == lhs.getIm();
+	return abs(lhs.getReal() - rhs.getReal()) < 0.001 && abs(lhs.getIm() - rhs.getIm()) < 0.001;
 }
 
 bool operator!=(const ComplexNumber& lhs, const ComplexNumber& rhs)

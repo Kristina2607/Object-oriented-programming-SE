@@ -29,7 +29,7 @@ public:
 	bool operator!() const;
 	double operator~() const;
 
-	void saveToFile(const char* file);
+	void saveToFile(const char* file) const;
 	void saveToFile(std::ofstream& ofs) const;
 
 	void readFromFile(const char* file);
