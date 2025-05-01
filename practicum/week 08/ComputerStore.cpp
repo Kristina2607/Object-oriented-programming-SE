@@ -1,5 +1,6 @@
 #include "ComputerStore.h"
 #include <iostream>
+#pragma warning (disable:4996)
 
 void ComputerStore::copyFrom(const ComputerStore& other)
 {
@@ -15,7 +16,6 @@ void ComputerStore::copyFrom(const ComputerStore& other)
 	{
 		computers[i] = other.computers[i];
 	}
-	computers = other.computers;
 }
 
 void ComputerStore::free()
@@ -38,8 +38,6 @@ void ComputerStore::resize(size_t newCapacity)
 	delete[] computers;
 	computers = newComputers;
 }
-
-ComputerStore::ComputerStore():computers(nullptr), name(nullptr), size(0), capacity(0) {}
 
 ComputerStore::ComputerStore(const char* name)
 {
@@ -68,6 +66,11 @@ ComputerStore::~ComputerStore()
 
 void ComputerStore::setName(const char* name)
 {
+	if (!name ||this->name==name)
+	{
+		return;
+	}
+	delete[]this->name;
 	size_t strLen = strlen(name);
 	this->name = new char[strLen + 1];
 	strcpy(this->name, name);
@@ -87,12 +90,12 @@ void ComputerStore::addComputer(const Computer& other)
 			computers[i].setQuantity(computers[i].getQuantity()+1);
 			return;
 		}
-		if (size >= capacity)
-		{
-			resize(size);
-		}
-		computers[size++] = other;
 	}
+	if (size == capacity)
+	{
+		resize(size+INITIAL_CAPACITY);
+	}
+	computers[size++] = other;
 }
 
 void ComputerStore::print() const
@@ -113,23 +116,32 @@ void ComputerStore::buyComputer(const char* brand, double money)
 			{
 				computers[i].setQuantity(computers[i].getQuantity()-1);
 			}
-			throw std::logic_error("This brand of the computer is more expensive.");
+			else
+			{
+				throw std::logic_error("This brand of the computer is more expensive.");
+			}
 		}
-		throw std::logic_error("Is not available");
 	}
+	throw std::logic_error("Is not available");
 }
 
-void ComputerStore::printAvailableComputers()
+void ComputerStore::printAvailableComputers(Criteria criteria) const
 {
 	for (int i = 0; i < size; i++)
 	{
-		if (computers[i].getQuantity() > 0)
+		if (criteria == Criteria::NoCriteria && computers[i].getQuantity() > 0)
+		{
+			computers[i].printComputer();
+		}
+		if (criteria == Criteria::Travel && computers[i].getQuantity() > 0 && ConsultantUtils::isGoodForTravel(computers[i]))
+		{
+			computers[i].printComputer();
+		}
+		else if (criteria == Criteria::Gaming && ConsultantUtils::isGoodForGaming(computers[i]) && computers[i].getQuantity() > 0)
 		{
 			computers[i].printComputer();
 		}
 	}
-
-	// filtrirane?
 }
 
 bool ConsultantUtils::isGoodForGaming(const Computer& obj)
@@ -143,7 +155,7 @@ bool ConsultantUtils::isGoodForGaming(const Computer& obj)
 				return true;
 			}
 		}
-    }
+	}
 	return false;
 }
 
