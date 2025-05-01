@@ -23,7 +23,7 @@ public:
 	Computer& operator=(const Computer& other);
 	~Computer();
 	
-	void setQuantity(int quantity); 
+	void setQuantity(unsigned quantity); 
 	void printComputer() const;
 
 	const char* getBrand() const;
@@ -36,4 +36,3 @@ public:
 	double getPrice() const;
 	int getQuantity() const;
 };
-
