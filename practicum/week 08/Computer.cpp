@@ -33,27 +33,21 @@ void Computer::free()
 	quantity = 0;
 }
 
-Computer::Computer() :brand(nullptr), processor(nullptr),  serialNumber(nextSerialNumber++),
+Computer::Computer() :brand(nullptr), processor(nullptr),
 video(0), hardDrive(0), weight(0), batteryLife(0), price(0), quantity(0){}
 
 Computer::Computer(const char* brand, const char* processor, int video, int hardDrive, double weight, double batteryLife, double price): serialNumber(nextSerialNumber++)
 {
-	if (!brand)
+	if (!brand || !processor)
 	{
 		throw std::invalid_argument("Invalid argument");
 	}
-	delete[] this->brand;
-	size_t strLen = strlen(brand);
-	this->brand = new char[strLen + 1];
+	size_t brandLen = strlen(brand);
+	this->brand = new char[brandLen + 1];
 	strcpy(this->brand, brand);
 
-	if (!processor)
-	{
-		throw std::invalid_argument("Invalid argument");
-	}
-	delete[] this->processor;
-	size_t strLen = strlen(processor);
-	this->processor = new char[strLen + 1];
+	size_t ProcessorLen = strlen(processor);
+	this->processor = new char[ProcessorLen + 1];
 	strcpy(this->processor, processor);
 
 	this->video = video;
@@ -83,16 +77,9 @@ Computer::~Computer()
 	free();
 }
 
-void Computer::setQuantity(int newQuantity)
+void Computer::setQuantity(unsigned newQuantity)
 {
-	if (newQuantity >= 0)
-	{ 
-		this->quantity = newQuantity;
-	}
-	else 
-	{
-		throw std::invalid_argument("Quantity cannot be negative");
-	}
+	quantity += newQuantity;
 }
 
 void Computer::printComputer() const
