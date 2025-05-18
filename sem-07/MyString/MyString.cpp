@@ -1,5 +1,6 @@
 #include "MyString.h"
 #include <algorithm>
+#include <utility>
 #pragma warning (disable : 4996)
 
 void MyString::free()
@@ -13,14 +14,24 @@ void MyString::free()
 void MyString::copyFrom(const MyString& other)
 {
 	capacity = other.capacity;
-	data = new char[capacity];
+	data = new char[capacity] {};
 	strcpy(data, other.data);
 	size = other.size;
 }
 
+void MyString::moveFrom(MyString&& other)
+{
+	size = other.size;
+	other.size = 0;
+	capacity = other.capacity;
+	other.capacity = 0;
+	data = other.data;
+	other.data = nullptr;
+}
+
 void MyString::resize(unsigned newCapacity)
 {
-	char* newData = new char[newCapacity + 1];
+	char* newData = new char[newCapacity + 1] {};
 	strcpy(newData, data);
 	delete[] data;
 	data = newData;
@@ -75,7 +86,7 @@ MyString::MyString(const char* str)
 
 	size = strlen(str);
 	capacity = getMaxResizeCapacity(size);
-	data = new char[capacity];
+	data = new char[capacity] {};
 	strcpy(data, str);
 }
 
@@ -92,6 +103,21 @@ MyString& MyString::operator=(const MyString& other)
 		copyFrom(other);
 	}
 
+	return *this;
+}
+
+MyString::MyString(MyString&& other) noexcept
+{
+	moveFrom(std::move(other));
+}
+
+MyString& MyString::operator=(MyString&& other) noexcept
+{
+	if (this != &other)
+	{
+		free();
+		moveFrom(std::move(other));
+	}
 	return *this;
 }
 
@@ -179,7 +205,7 @@ std::ostream& operator<<(std::ostream& os, const MyString& str)
 
 std::istream& operator>>(std::istream& is, MyString& str)
 {
-	char buff[1024];
+	char buff[1024] {};
 	is >> buff;
 
 	size_t buffStringSize = strlen(buff);
@@ -199,7 +225,7 @@ MyString MyString::substr(unsigned begin, unsigned howMany)
 
 	MyString res;
 	res.capacity = getMaxResizeCapacity(howMany + 1);
-	res.data = new char[res.capacity];
+	res.data = new char[res.capacity]{};
 	strncat(res.data, data + begin, howMany);
 	res.size = howMany;
 
